@@ -1,13 +1,39 @@
 dnl Process this file with autoconf to produce a configure script
 
-AC_INIT(lcurses, 4, rrt@sc3d.org)
+AC_INIT(lcurses, 5, rrt@sc3d.org)
 AM_INIT_AUTOMAKE([-Wall -Werror std-options])
+AM_SILENT_RULES([yes])
 
 dnl Check for programs
 AC_PROG_CC
-if test "$GCC" = yes; then
-  CFLAGS="$CFLAGS -W -Wmissing-prototypes -Wstrict-prototypes -D_FORTIFY_SOURCE=2"
-fi
+gl_EARLY
+gl_MANYWARN_ALL_GCC([warnings])
+# Set up the list of undesired warnings.
+nw=
+nw="$nw -Wsystem-headers"   # Don’t let system headers trigger warnings
+nw="$nw -Wundef"            # All compiler preprocessors support #if UNDEF
+nw="$nw -Wtraditional"      # All compilers nowadays support ANSI C
+nw="$nw -Wstrict-overflow"  # Use a lower level (see below).
+nw="$nw -Wconversion"       # These warnings usually don’t point to mistakes.
+nw="$nw -Wsign-conversion"  # Likewise.
+nw="$nw -Waggregate-return" # We do this on purpose.
+nw="$nw -Wbad-function-cast" # FIXME: We do this on purpose (non-pointer list elements).
+nw="$nw -Wtraditional-conversion" # Don't care.
+nw="$nw -Wpadded"           # Don't care.
+nw="$nw -Wc++-compat"       # Don't care.
+nw="$nw -Woverlength-strings" # Don't care.
+nw="$nw -Wmissing-format-attribute" # Don't care.
+nw="$nw -Wunreachable-code" # Seems buggy.
+# Enable all GCC warnings not in this list.
+gl_MANYWARN_COMPLEMENT([warnings], [$warnings], [$nw])
+for w in $warnings; do
+  gl_WARN_ADD([$w])
+done
+# Add an extra warning
+gl_WARN_ADD([-Wstrict-overflow=1], [WARN_FLAGS])
+# Add some more safety measures
+gl_WARN_ADD([-D_FORTIFY_SOURCE=2], [WARN_FLAGS])
+gl_WARN_ADD([-fmudflap], [WARN_FLAGS])
 AC_PROG_LIBTOOL
 AC_SUBST(LIBTOOL_DEPS)
 
@@ -21,21 +47,12 @@ if test "$ax_cv_curses" != "yes"; then
 fi
 AC_ARG_VAR(CURSES_LIB, [linker flags for curses library])
 
-dnl Lua
-AX_WITH_LUA
-if test -z "$LUA"; then
-  AC_MSG_FAILURE([Lua not found])
-fi
-AX_LUA_VERSION(501, 502)
+dnl Lua 5.1
+AX_PROG_LUA(501)
 AX_LUA_HEADERS
-AX_LUA_HEADERS_VERSION(501, 502)
-AX_LUA_LIBS
-if test -z "$LUA_LIB"; then
-  AC_MSG_FAILURE([liblua not found])
-fi
+AX_LUA_HEADERS_VERSION(501)
 AC_SUBST(LUA)
 AC_SUBST(LUA_INCLUDE)
-AC_SUBST(LUA_LIB)
 
 dnl Lua libraries
 dnl FIXME: Parametrize on version

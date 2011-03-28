@@ -3,12 +3,11 @@
 ACLOCAL_AMFLAGS = -I m4
 
 AM_CPPFLAGS = $(LUA_INCLUDE)
-LDADD = $(LUA_LIB)
 
 lualib_LTLIBRARIES = curses.la
 
 curses_la_SOURCES = lcurses.c
-curses_la_LDFLAGS = -module
+curses_la_LDFLAGS = -module $(CURSES_LIB)
 
 release: distcheck
 	git diff --exit-code && \

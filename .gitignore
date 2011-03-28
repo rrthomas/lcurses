@@ -1,10 +1,12 @@
+*~
 .deps
 .libs
-curses.la
-lcurses.lo
-lcurses.o
-lcurses-*.tar.gz
-release-notes-*
+/curses.la
+/lcurses.lo
+/lcurses.o
+/lcurses-*.tar.gz
+/release-notes-*
+/lib
 /INSTALL
 /ChangeLog
 /aclocal.m4
@@ -25,3 +27,4 @@ release-notes-*
 /missing
 /Makefile
 /Makefile.in
+/stamp-h1
