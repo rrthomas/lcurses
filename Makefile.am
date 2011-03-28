@@ -13,4 +13,4 @@ release: distcheck
 	git diff --exit-code && \
 	git tag -a -m "Release tag" rel-`echo $(VERSION) | sed -e 's/\./-/g'` && \
 	git push && \
-	woger lua-l lcurses lcurses "release $(VERSION)" "Lua binding for curses" release-notes-$(VERSION)
+	woger lua-l lcurses lcurses "release $(VERSION)" "Lua bindings for curses" release-notes-$(VERSION)
