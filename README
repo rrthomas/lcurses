@@ -7,7 +7,7 @@
 
 lcurses is a C library for Lua 5.1 that wraps the curses API. It is
 copyright Tiago Dionizio <tiago.dionizio@gmail.com> 2004-2007 and
-copyright Reuben Thomas 2009-2010, and is released under the MIT
+copyright Reuben Thomas 2009-2011, and is released under the MIT
 license, like Lua (see http://www.lua.org/copyright.html; it's
 basically the same as the BSD license). There is no warranty.
 
@@ -22,7 +22,7 @@ As normal:
 
 [If using git sources:
 
-    autoreconf -i
+    ./autogen.sh
 ]
 
     ./configure && make [&& make install]
@@ -47,7 +47,5 @@ Unfortunately, there's currently no documentation other than
 lcurses.c. It's fairly straightforward, though.
 
 GNU Zile 2.4.0 and later is written in Lua, using lcurses, so it
-contains plenty of example code. It has not been released at the time
-of writing, but it does mostly work (and the curses code in
-particular); its git repository is at
-http://git.savannah.gnu.org/cgit/zile.git
+contains plenty of example code. See the lua branch of its git
+repository at: http://git.savannah.gnu.org/cgit/zile.git
