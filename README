@@ -1,0 +1,53 @@
+                               lcurses
+                               -------
+
+                   by Reuben Thomas <rrt@sc3d.org>
+                 http://luaforge.net/projects/lcurses
+
+
+lcurses is a C library for Lua 5.1 that wraps the curses API. It is
+copyright Tiago Dionizio <tiago.dionizio@gmail.com> 2004-2007 and
+copyright Reuben Thomas 2009-2010, and is released under the MIT
+license, like Lua (see http://www.lua.org/copyright.html; it's
+basically the same as the BSD license). There is no warranty.
+
+Please report bugs and make suggestions to the email address above, or
+use the LuaForge trackers.
+
+
+Installation
+------------
+
+As normal:
+
+[If using git sources:
+
+    autoreconf -i
+]
+
+    ./configure && make [&& make install]
+
+The following options may be of interest if you have Lua installed on
+non-default paths (as you are likely to on any system supporting more
+than one version of Lua):
+
+  --libdir=DIR            Install shared library in this directory
+  --with-lua-prefix=DIR   Lua files are in DIR
+  --with-lua-suffix=ARG   Lua binary and library files are suffixed with ARG
+
+For example, on Debian or Ubuntu:
+
+  CPPFLAGS=/usr/include/lua5.1 ./configure --libdir=/usr/local/lib/lua/5.1 --with-lua-suffix=5.1
+
+
+Use
+---
+
+Unfortunately, there's currently no documentation other than
+lcurses.c. It's fairly straightforward, though.
+
+GNU Zile 2.4.0 and later is written in Lua, using lcurses, so it
+contains plenty of example code. It has not been released at the time
+of writing, but it does mostly work (and the curses code in
+particular); its git repository is at
+http://git.savannah.gnu.org/cgit/zile.git
