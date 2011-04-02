@@ -2,7 +2,8 @@ dnl Process this file with autoconf to produce a configure script
 
 AC_INIT(lcurses, 5, rrt@sc3d.org)
 AM_INIT_AUTOMAKE([-Wall -Werror std-options])
-AM_SILENT_RULES([yes])
+
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 dnl Check for programs
 AC_PROG_CC
