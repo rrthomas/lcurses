@@ -7,7 +7,7 @@ AM_CPPFLAGS = $(LUA_INCLUDE)
 lualib_LTLIBRARIES = curses.la
 
 curses_la_SOURCES = lcurses.c
-curses_la_LDFLAGS = -module $(LUA_LIB) $(CURSES_LIB)
+curses_la_LDFLAGS = -module $(CURSES_LIB)
 
 release: distcheck
 	git diff --exit-code && \
