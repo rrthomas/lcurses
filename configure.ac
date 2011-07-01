@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script
 
-AC_INIT(lcurses, 5, rrt@sc3d.org)
+AC_INIT(lcurses, 6, rrt@sc3d.org)
 AM_INIT_AUTOMAKE([-Wall -Werror std-options])
 AM_SILENT_RULES([yes])
 
