@@ -37,7 +37,7 @@ than one version of Lua):
 
 For example, on Debian or Ubuntu:
 
-  CPPFLAGS=/usr/include/lua5.1 ./configure --libdir=/usr/local/lib/lua/5.1 --with-lua-suffix=5.1
+  CPPFLAGS='-I /usr/include/lua5.1' ./configure --libdir=/usr/local/lib/lua/5.1 --with-lua-suffix=5.1
 
 
 Use

@@ -11,6 +11,8 @@ curses_la_LDFLAGS = -module $(CURSES_LIB)
 
 release: distcheck
 	git diff --exit-code && \
-	git tag -a -m "Release tag" rel-`echo $(VERSION) | sed -e 's/\./-/g'` && \
 	git push && \
-	woger lua-l lcurses lcurses "release $(VERSION)" "Lua bindings for curses" release-notes-$(VERSION)
+	woger lua-l package=lcurses package_name=lcurses version="release $(VERSION)" description="Lua bindings for curses" notes=release-notes-$(VERSION)
+	git tag -a -m "Release tag" rel-`echo $(VERSION) | sed -e 's/\./-/g'` && \
+	git push --tags
+	@cat release-notes-$(REL) && echo "\n\nDon't forget to release on LuaForge!"
