@@ -9,8 +9,10 @@
 /lib
 /INSTALL
 /ChangeLog
+/COPYING
 /aclocal.m4
 /autom4te.cache
+/build-aux
 /config.h
 /config.h.in
 /config.log
@@ -21,6 +23,7 @@
 /config.lineno
 /configure
 /depcomp
+/gnulib
 /install-sh
 /libtool
 /ltmain.sh

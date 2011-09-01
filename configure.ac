@@ -1,6 +1,8 @@
 dnl Process this file with autoconf to produce a configure script
 
 AC_INIT(lcurses, 6, rrt@sc3d.org)
+AC_CONFIG_AUX_DIR([build-aux])
+
 AM_INIT_AUTOMAKE([-Wall -Werror std-options])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
