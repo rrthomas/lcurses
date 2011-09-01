@@ -41,6 +41,7 @@ if test "$gl_gcc_warnings" = yes; then
   nw="$nw -Woverlength-strings" # Don't care.
   nw="$nw -Wmissing-format-attribute" # Don't care.
   nw="$nw -Wunreachable-code" # Seems buggy.
+  nw="$nw -Wunused-macros"    # those macros might come in handy later
 
   gl_MANYWARN_ALL_GCC([warnings])
 
