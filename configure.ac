@@ -10,33 +10,53 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 dnl Check for programs
 AC_PROG_CC
 gl_EARLY
-gl_MANYWARN_ALL_GCC([warnings])
-# Set up the list of undesired warnings.
-nw=
-nw="$nw -Wsystem-headers"   # Don’t let system headers trigger warnings
-nw="$nw -Wundef"            # All compiler preprocessors support #if UNDEF
-nw="$nw -Wtraditional"      # All compilers nowadays support ANSI C
-nw="$nw -Wstrict-overflow"  # Use a lower level (see below).
-nw="$nw -Wconversion"       # These warnings usually don’t point to mistakes.
-nw="$nw -Wsign-conversion"  # Likewise.
-nw="$nw -Waggregate-return" # We do this on purpose.
-nw="$nw -Wbad-function-cast" # FIXME: We do this on purpose (non-pointer list elements).
-nw="$nw -Wtraditional-conversion" # Don't care.
-nw="$nw -Wpadded"           # Don't care.
-nw="$nw -Wc++-compat"       # Don't care.
-nw="$nw -Woverlength-strings" # Don't care.
-nw="$nw -Wmissing-format-attribute" # Don't care.
-nw="$nw -Wunreachable-code" # Seems buggy.
-# Enable all GCC warnings not in this list.
-gl_MANYWARN_COMPLEMENT([warnings], [$warnings], [$nw])
-for w in $warnings; do
-  gl_WARN_ADD([$w])
-done
-# Add an extra warning
-gl_WARN_ADD([-Wstrict-overflow=1], [WARN_FLAGS])
-# Add some more safety measures
-gl_WARN_ADD([-D_FORTIFY_SOURCE=2], [WARN_FLAGS])
-gl_WARN_ADD([-fmudflap], [WARN_FLAGS])
+
+AC_ARG_ENABLE([gcc-warnings],
+  [AS_HELP_STRING([--enable-gcc-warnings],
+		  [turn on lots of GCC warnings (for developers)])],
+  [case $enableval in
+     yes|no) ;;
+     *)      AC_MSG_ERROR([bad value $enableval for gcc-warnings option]) ;;
+   esac
+   gl_gcc_warnings=$enableval],
+  [gl_gcc_warnings=no]
+)
+
+if test "$gl_gcc_warnings" = yes; then
+  gl_WARN_ADD([-Werror], [WERROR_CFLAGS])
+
+  # Set up the list of undesired warnings.
+  nw=
+  nw="$nw -Wsystem-headers"   # Don’t let system headers trigger warnings
+  nw="$nw -Wundef"            # All compiler preprocessors support #if UNDEF
+  nw="$nw -Wtraditional"      # All compilers nowadays support ANSI C
+  nw="$nw -Wstrict-overflow"  # Use a lower level (see below).
+  nw="$nw -Wconversion"       # These warnings usually don’t point to mistakes.
+  nw="$nw -Wsign-conversion"  # Likewise.
+  nw="$nw -Waggregate-return" # We do this on purpose.
+  nw="$nw -Wbad-function-cast" # FIXME: We do this on purpose (non-pointer list elements).
+  nw="$nw -Wtraditional-conversion" # Don't care.
+  nw="$nw -Wpadded"           # Don't care.
+  nw="$nw -Wc++-compat"       # Don't care.
+  nw="$nw -Woverlength-strings" # Don't care.
+  nw="$nw -Wmissing-format-attribute" # Don't care.
+  nw="$nw -Wunreachable-code" # Seems buggy.
+
+  gl_MANYWARN_ALL_GCC([warnings])
+
+  # Enable all GCC warnings not in this list.
+  gl_MANYWARN_COMPLEMENT([warnings], [$warnings], [$nw])
+  for w in $warnings; do
+    gl_WARN_ADD([$w])
+  done
+
+  # Add an extra warning
+  gl_WARN_ADD([-Wstrict-overflow=1])
+  # Add some more safety measures
+  gl_WARN_ADD([-D_FORTIFY_SOURCE=2])
+  gl_WARN_ADD([-fmudflap])
+fi
+
 AC_PROG_LIBTOOL
 AC_SUBST(LIBTOOL_DEPS)
 
