@@ -40,6 +40,8 @@ gl_WARN_ADD([-fmudflap], [WARN_FLAGS])
 AC_PROG_LIBTOOL
 AC_SUBST(LIBTOOL_DEPS)
 
+gl_INIT
+
 dnl Check for header files
 AC_HEADER_STDC
 
