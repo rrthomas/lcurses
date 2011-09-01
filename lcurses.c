@@ -35,6 +35,7 @@
 #else
 #include <curses.h>
 #endif
+#include <term.h>
 
 
 /*
@@ -1827,6 +1828,50 @@ LCW_BOOLOK(wstandout)
 
 /*
 ** =======================================================
+** query terminfo database
+** =======================================================
+*/
+
+static int ti_getflag (lua_State *L)
+{
+    const char *capname = luaL_checkstring (L, 1);
+    int res = tigetflag ((char *)capname);
+    if (-1 == res)
+        return luaL_error (L, "`%s' is not a boolean capability", capname);
+    else
+        lua_pushboolean (L, res);
+    return 1;
+}
+
+static int ti_getnum (lua_State *L)
+{
+    const char *capname = luaL_checkstring (L, 1);
+    int res = tigetnum ((char *)capname);
+    if (-2 == res)
+        return luaL_error (L, "`%s' is not a numeric capability", capname);
+    else if (-1 == res)
+        lua_pushnil (L);
+    else
+        lua_pushnumber(L, res);
+    return 1;
+}
+
+static int ti_getstr (lua_State *L)
+{
+    const char *capname = luaL_checkstring (L, 1);
+    const char *res = tigetstr ((char *)capname);
+    if ((char *) -1 == res)
+        return luaL_error (L, "`%s' is not a string capability", capname);
+    else if (NULL == res)
+        lua_pushnil (L);
+    else
+        lua_pushstring(L, res);
+    return 1;
+}
+
+
+/*
+** =======================================================
 ** register functions
 ** =======================================================
 */
@@ -2058,6 +2103,11 @@ static const luaL_reg curseslib[] =
 
     /* outopts */
     { "nl",             lc_nl           },
+
+    /* query terminfo database */
+    { "tigetflag",	ti_getflag	},
+    { "tigetnum",	ti_getnum	},
+    { "tigetstr",	ti_getstr	},
 
     /* slk */
     ECF(slk_init)
