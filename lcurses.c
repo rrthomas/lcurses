@@ -35,6 +35,7 @@
 #else
 #include <curses.h>
 #endif
+#include <term.h>
 
 
 /*
@@ -145,17 +146,17 @@ static void lcw_new(lua_State *L, WINDOW *nw)
     }
 }
 
-static WINDOW **lcw_get(lua_State *L, int index)
+static WINDOW **lcw_get(lua_State *L, int offset)
 {
-    WINDOW **w = (WINDOW**)luaL_checkudata(L, index, WINDOWMETA);
-    if (w == NULL) luaL_argerror(L, index, "bad curses window");
+    WINDOW **w = (WINDOW**)luaL_checkudata(L, offset, WINDOWMETA);
+    if (w == NULL) luaL_argerror(L, offset, "bad curses window");
     return w;
 }
 
-static WINDOW *lcw_check(lua_State *L, int index)
+static WINDOW *lcw_check(lua_State *L, int offset)
 {
-    WINDOW **w = lcw_get(L, index);
-    if (*w == NULL) luaL_argerror(L, index, "attempt to use closed curses window");
+    WINDOW **w = lcw_get(L, offset);
+    if (*w == NULL) luaL_argerror(L, offset, "attempt to use closed curses window");
     return *w;
 }
 
@@ -176,23 +177,23 @@ static int lcw_tostring(lua_State *L)
 ** chtype handling
 ** =======================================================
 */
-static chtype lc_checkch(lua_State *L, int index)
+static chtype lc_checkch(lua_State *L, int offset)
 {
-    if (lua_type(L, index) == LUA_TNUMBER)
-        return (chtype)luaL_checknumber(L, index);
-    if (lua_type(L, index) == LUA_TSTRING)
-        return *lua_tostring(L, index);
+    if (lua_type(L, offset) == LUA_TNUMBER)
+        return (chtype)luaL_checknumber(L, offset);
+    if (lua_type(L, offset) == LUA_TSTRING)
+        return *lua_tostring(L, offset);
 
-    luaL_typerror(L, index, "chtype");
+    luaL_typerror(L, offset, "chtype");
     /* never executes */
     return (chtype)0;
 }
 
-static chtype lc_optch(lua_State *L, int index, chtype def)
+static chtype lc_optch(lua_State *L, int offset, chtype def)
 {
-    if (lua_isnoneornil(L, index))
+    if (lua_isnoneornil(L, offset))
         return def;
-    return lc_checkch(L, index);
+    return lc_checkch(L, offset);
 }
 
 /****c* classes/chstr
@@ -229,12 +230,12 @@ static chstr* chstr_new(lua_State *L, int len)
 }
 
 /* get chstr from lua (convert if needed) */
-static chstr* lc_checkchstr(lua_State *L, int index)
+static chstr* lc_checkchstr(lua_State *L, int offset)
 {
-    chstr *cs = (chstr*)luaL_checkudata(L, index, CHSTRMETA);
+    chstr *cs = (chstr*)luaL_checkudata(L, offset, CHSTRMETA);
     if (cs) return cs;
 
-    luaL_argerror(L, index, "bad curses chstr");
+    luaL_argerror(L, offset, "bad curses chstr");
     return NULL;
 }
 
@@ -257,24 +258,24 @@ static int lc_new_chstr(lua_State *L)
 static int chstr_set_str(lua_State *L)
 {
     chstr *cs = lc_checkchstr(L, 1);
-    int index = luaL_checkint(L, 2);
+    int offset = luaL_checkint(L, 2);
     const char *str = luaL_checkstring(L, 3);
     int len = lua_strlen(L, 3);
     int attr = (chtype)luaL_optnumber(L, 4, A_NORMAL);
     int rep = luaL_optint(L, 5, 1);
     int i;
 
-    if (index < 0)
+    if (offset < 0)
         return 0;
 
-    while (rep-- > 0 && index <= (int)cs->len)
+    while (rep-- > 0 && offset <= (int)cs->len)
     {
-        if (index + len - 1 > (int)cs->len)
-            len = cs->len - index + 1;
+        if (offset + len - 1 > (int)cs->len)
+            len = cs->len - offset + 1;
 
         for (i = 0; i < len; ++i)
-            cs->str[index + i] = str[i] | attr;
-        index += len;
+            cs->str[offset + i] = str[i] | attr;
+        offset += len;
     }
 
     return 0;
@@ -286,7 +287,7 @@ static int chstr_set_str(lua_State *L)
  *   Set a character in the buffer.
  *
  * SYNOPSIS
- *   chstr:set_ch(index, char, attribute [, repeat])
+ *   chstr:set_ch(offset, char, attribute [, repeat])
  *
  * EXAMPLE
  *   Set the buffer with 'a's where the first one is capitalized
@@ -299,19 +300,19 @@ static int chstr_set_str(lua_State *L)
 static int chstr_set_ch(lua_State *L)
 {
     chstr* cs = lc_checkchstr(L, 1);
-    int index = luaL_checkint(L, 2);
+    int offset = luaL_checkint(L, 2);
     chtype ch = lc_checkch(L, 3);
     int attr = (chtype)luaL_optnumber(L, 4, A_NORMAL);
     int rep = luaL_optint(L, 5, 1);
 
     while (rep-- > 0)
     {
-        if (index < 0 || index >= (int) cs->len)
+        if (offset < 0 || offset >= (int) cs->len)
             return 0;
 
-        cs->str[index] = ch | attr;
+        cs->str[offset] = ch | attr;
 
-        ++index;
+        ++offset;
     }
     return 0;
 }
@@ -320,13 +321,13 @@ static int chstr_set_ch(lua_State *L)
 static int chstr_get(lua_State *L)
 {
     chstr* cs = lc_checkchstr(L, 1);
-    int index = luaL_checkint(L, 2);
+    int offset = luaL_checkint(L, 2);
     chtype ch;
 
-    if (index < 0 || index >= (int) cs->len)
+    if (offset < 0 || offset >= (int) cs->len)
         return 0;
 
-    ch = cs->str[index];
+    ch = cs->str[offset];
 
     lua_pushnumber(L, ch & A_CHARTEXT);
     lua_pushnumber(L, ch & A_ATTRIBUTES);
@@ -1414,10 +1415,10 @@ static int lcw_copywin(lua_State *L)
     int dmincol = luaL_checkint(L, 6);
     int dmaxrow = luaL_checkint(L, 7);
     int dmaxcol = luaL_checkint(L, 8);
-    int overlay = lua_toboolean(L, 9);
+    int woverlay = lua_toboolean(L, 9);
 
     lua_pushboolean(L, B(copywin(srcwin, dstwin, sminrow,
-        smincol, dminrow, dmincol, dmaxrow, dmaxcol, overlay)));
+        smincol, dminrow, dmincol, dmaxrow, dmaxcol, woverlay)));
 
     return 1;
 }
@@ -1827,6 +1828,58 @@ LCW_BOOLOK(wstandout)
 
 /*
 ** =======================================================
+** query terminfo database
+** =======================================================
+*/
+
+static char ti_capname[32];
+
+static int ti_getflag (lua_State *L)
+{
+    int res;
+
+    strlcpy (ti_capname, luaL_checkstring (L, 1), sizeof (ti_capname));
+    res = tigetflag (ti_capname);
+    if (-1 == res)
+        return luaL_error (L, "`%s' is not a boolean capability", ti_capname);
+    else
+        lua_pushboolean (L, res);
+    return 1;
+}
+
+static int ti_getnum (lua_State *L)
+{
+    int res;
+
+    strlcpy (ti_capname, luaL_checkstring (L, 1), sizeof (ti_capname));
+    res = tigetnum (ti_capname);
+    if (-2 == res)
+        return luaL_error (L, "`%s' is not a numeric capability", ti_capname);
+    else if (-1 == res)
+        lua_pushnil (L);
+    else
+        lua_pushnumber(L, res);
+    return 1;
+}
+
+static int ti_getstr (lua_State *L)
+{
+    const char *res;
+
+    strlcpy (ti_capname, luaL_checkstring (L, 1), sizeof (ti_capname));
+    res = tigetstr (ti_capname);
+    if ((char *) -1 == res)
+        return luaL_error (L, "`%s' is not a string capability", ti_capname);
+    else if (NULL == res)
+        lua_pushnil (L);
+    else
+        lua_pushstring(L, res);
+    return 1;
+}
+
+
+/*
+** =======================================================
 ** register functions
 ** =======================================================
 */
@@ -2058,6 +2111,11 @@ static const luaL_reg curseslib[] =
 
     /* outopts */
     { "nl",             lc_nl           },
+
+    /* query terminfo database */
+    { "tigetflag",	ti_getflag	},
+    { "tigetnum",	ti_getnum	},
+    { "tigetstr",	ti_getstr	},
 
     /* slk */
     ECF(slk_init)
