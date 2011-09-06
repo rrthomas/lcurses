@@ -19,4 +19,4 @@ release: distcheck
 	woger lua-l package=lcurses package_name=lcurses version="release $(VERSION)" description="Lua bindings for curses" notes=release-notes-$(VERSION)
 	git tag -a -m "Release tag" rel-`echo $(VERSION) | sed -e 's/\./-/g'` && \
 	git push --tags
-	@cat release-notes-$(REL) && echo "\n\nDon't forget to release on LuaForge!"
+	@cat release-notes-$(VERSION) && echo "\n\nDon't forget to release on LuaForge!"
