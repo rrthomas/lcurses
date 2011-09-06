@@ -84,6 +84,8 @@ dnl Lua libraries
 dnl FIXME: Parametrize on version
 lualibdir='${libdir}/lua/5.1'
 AC_SUBST(lualibdir)
+luadatadir='${datadir}/lua/5.1'
+AC_SUBST(luadatadir)
 
 dnl Perl
 AX_WITH_PROG([PERL], [perl])

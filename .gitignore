@@ -2,7 +2,7 @@
 *.html
 .deps
 .libs
-/curses.la
+/curses_c.la
 /lcurses.lo
 /lcurses.o
 /lcurses-*.tar.gz

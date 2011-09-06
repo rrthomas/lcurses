@@ -5,10 +5,11 @@ ACLOCAL_AMFLAGS = -I m4
 AM_CPPFLAGS = $(LUA_INCLUDE)
 AM_CFLAGS = $(WERROR_CFLAGS) $(WARN_CFLAGS)
 
-lualib_LTLIBRARIES = curses.la
+lualib_LTLIBRARIES = curses_c.la
+dist_luadata_DATA = curses.lua
 
-curses_la_SOURCES = lcurses.c
-curses_la_LDFLAGS = -module $(CURSES_LIB)
+curses_c_la_SOURCES = lcurses.c
+curses_c_la_LDFLAGS = -module $(CURSES_LIB)
 
 ChangeLog:
 	git2cl > ChangeLog

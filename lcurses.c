@@ -2128,9 +2128,9 @@ static const luaL_reg curseslib[] =
 
 
 /* Prototype to keep compiler happy. */
-int luaopen_curses (lua_State *L);
+int luaopen_curses_c (lua_State *L);
 
-int luaopen_curses (lua_State *L)
+int luaopen_curses_c (lua_State *L)
 {
     /*
     ** create new metatable for window objects
