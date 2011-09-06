@@ -1,4 +1,5 @@
 *~
+*.html
 .deps
 .libs
 /curses.la

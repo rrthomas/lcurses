@@ -16,6 +16,11 @@ ChangeLog:
 # FIXME: Make the following portable
 LUA_ENV = LUA_INIT= LUA_PATH="$(abs_srcdir)/?.lua;;" LUA_CPATH="$(abs_srcdir)/.libs/?.so;;"
 
+EXTRA_DIST = lcurses.html lcurses_c.html
+
+lcurses_c.html: lcurses.c make_lcurses_doc.pl
+	$(PERL) make_lcurses_doc.pl
+
 check-local:
 	$(LUA_ENV) $(LUA) tests.lua
 
