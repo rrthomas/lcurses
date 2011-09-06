@@ -10,6 +10,9 @@ lualib_LTLIBRARIES = curses.la
 curses_la_SOURCES = lcurses.c
 curses_la_LDFLAGS = -module $(CURSES_LIB)
 
+ChangeLog:
+	git2cl > ChangeLog
+
 release: distcheck
 	git diff --exit-code && \
 	git push && \
