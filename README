@@ -46,6 +46,6 @@ Use
 Unfortunately, there's currently no documentation other than
 lcurses.c. It's fairly straightforward, though.
 
-GNU Zile 2.4.0 and later is written in Lua, using lcurses, so it
+GNU Zile 2.5.0 and later is written in Lua, using lcurses, so it
 contains plenty of example code. See the lua branch of its git
 repository at: http://git.savannah.gnu.org/cgit/zile.git
