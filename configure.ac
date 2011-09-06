@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script
 
-AC_INIT(lcurses, 6, rrt@sc3d.org)
+AC_INIT(lcurses, 7, rrt@sc3d.org)
 AC_CONFIG_AUX_DIR([build-aux])
 
 AM_INIT_AUTOMAKE([-Wall -Werror std-options])
@@ -13,7 +13,7 @@ gl_EARLY
 
 AC_ARG_ENABLE([gcc-warnings],
   [AS_HELP_STRING([--enable-gcc-warnings],
-		  [turn on lots of GCC warnings (for developers)])],
+                  [turn on lots of GCC warnings (for developers)])],
   [case $enableval in
      yes|no) ;;
      *)      AC_MSG_ERROR([bad value $enableval for gcc-warnings option]) ;;
