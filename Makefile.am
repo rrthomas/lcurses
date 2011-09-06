@@ -13,6 +13,12 @@ curses_la_LDFLAGS = -module $(CURSES_LIB)
 ChangeLog:
 	git2cl > ChangeLog
 
+# FIXME: Make the following portable
+LUA_ENV = LUA_INIT= LUA_PATH="$(abs_srcdir)/?.lua;;" LUA_CPATH="$(abs_srcdir)/.libs/?.so;;"
+
+check-local:
+	$(LUA_ENV) $(LUA) tests.lua
+
 release: distcheck
 	git diff --exit-code && \
 	git push && \
