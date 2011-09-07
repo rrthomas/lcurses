@@ -37,6 +37,10 @@
 #endif
 #include <term.h>
 
+/* strlcpy() implementation for non-BSD based Unices.
+   strlcpy() is a safer less error-prone replacement for strncpy(). */
+#include "strlcpy.c"
+
 
 /*
 ** =======================================================
