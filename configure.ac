@@ -58,7 +58,16 @@ if test "$gl_gcc_warnings" = yes; then
   gl_WARN_ADD([-fmudflap])
 fi
 
-AC_PROG_LIBTOOL
+LT_PREREQ([2.2.6])
+LT_INIT
+LT_OUTPUT
+
+eval `./libtool --config |grep '^objdir='`
+eval `./libtool --config |grep '^shrext_cmds='`
+module=yes eval shrext=$shrext_cmds
+
+AC_SUBST([objdir])
+AC_SUBST([shrext])
 AC_SUBST(LIBTOOL_DEPS)
 
 gl_INIT
