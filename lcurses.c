@@ -1832,12 +1832,16 @@ LCW_BOOLOK(wstandout)
 ** =======================================================
 */
 
+static char ti_capname[32];
+
 static int ti_getflag (lua_State *L)
 {
-    const char *capname = luaL_checkstring (L, 1);
-    int res = tigetflag (capname);
+    int res;
+
+    strlcpy (ti_capname, luaL_checkstring (L, 1), sizeof (ti_capname));
+    res = tigetflag (ti_capname);
     if (-1 == res)
-        return luaL_error (L, "`%s' is not a boolean capability", capname);
+        return luaL_error (L, "`%s' is not a boolean capability", ti_capname);
     else
         lua_pushboolean (L, res);
     return 1;
@@ -1845,10 +1849,12 @@ static int ti_getflag (lua_State *L)
 
 static int ti_getnum (lua_State *L)
 {
-    const char *capname = luaL_checkstring (L, 1);
-    int res = tigetnum (capname);
+    int res;
+
+    strlcpy (ti_capname, luaL_checkstring (L, 1), sizeof (ti_capname));
+    res = tigetnum (ti_capname);
     if (-2 == res)
-        return luaL_error (L, "`%s' is not a numeric capability", capname);
+        return luaL_error (L, "`%s' is not a numeric capability", ti_capname);
     else if (-1 == res)
         lua_pushnil (L);
     else
@@ -1858,10 +1864,12 @@ static int ti_getnum (lua_State *L)
 
 static int ti_getstr (lua_State *L)
 {
-    const char *capname = luaL_checkstring (L, 1);
-    const char *res = tigetstr (capname);
+    const char *res;
+
+    strlcpy (ti_capname, luaL_checkstring (L, 1), sizeof (ti_capname));
+    res = tigetstr (ti_capname);
     if ((char *) -1 == res)
-        return luaL_error (L, "`%s' is not a string capability", capname);
+        return luaL_error (L, "`%s' is not a string capability", ti_capname);
     else if (NULL == res)
         lua_pushnil (L);
     else
