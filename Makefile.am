@@ -14,7 +14,6 @@ curses_c_la_LDFLAGS = -module $(CURSES_LIB)
 ChangeLog:
 	git2cl > ChangeLog
 
-# FIXME: Make the following portable
 LUA_ENV = LUA_INIT= LUA_PATH="$(abs_srcdir)/?.lua;;" LUA_CPATH="$(abs_srcdir)/$(objdir)/?$(shrext);;"
 
 EXTRA_DIST = lcurses.html lcurses_c.html
