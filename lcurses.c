@@ -1832,12 +1832,9 @@ LCW_BOOLOK(wstandout)
 ** =======================================================
 */
 
-/* The tiget* functions take a char *, not a const char *, but surely
-   don't ever overwrite their arguments, so we just cast below. */
-
 static int ti_getflag (lua_State *L)
 {
-    char *capname = (char *) luaL_checkstring (L, 1);
+    const char *capname = luaL_checkstring (L, 1);
     int res = tigetflag (capname);
     if (-1 == res)
         return luaL_error (L, "`%s' is not a boolean capability", capname);
@@ -1848,7 +1845,7 @@ static int ti_getflag (lua_State *L)
 
 static int ti_getnum (lua_State *L)
 {
-    char *capname = (char *) luaL_checkstring (L, 1);
+    const char *capname = luaL_checkstring (L, 1);
     int res = tigetnum (capname);
     if (-2 == res)
         return luaL_error (L, "`%s' is not a numeric capability", capname);
@@ -1861,7 +1858,7 @@ static int ti_getnum (lua_State *L)
 
 static int ti_getstr (lua_State *L)
 {
-    char *capname = (char *) luaL_checkstring (L, 1);
+    const char *capname = luaL_checkstring (L, 1);
     const char *res = tigetstr (capname);
     if ((char *) -1 == res)
         return luaL_error (L, "`%s' is not a string capability", capname);
