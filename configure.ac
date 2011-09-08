@@ -75,6 +75,8 @@ gl_INIT
 dnl Check for header files
 AC_HEADER_STDC
 
+AC_CHECK_FUNCS([strlcpy])
+
 dnl Curses
 AX_WITH_CURSES
 if test "$ax_cv_curses" != "yes"; then
